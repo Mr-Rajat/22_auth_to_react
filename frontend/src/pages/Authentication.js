@@ -33,7 +33,7 @@ export const action = async ({request}) => {
     body: JSON.stringify(authData)
   });
 
-  if(response.status === 4022 || response.status === 401) {
+  if(response.status === 422 || response.status === 401) {
     return response;
   }
 
@@ -41,7 +41,11 @@ export const action = async ({request}) => {
     throw json ({ message: 'Could not authenticate user.'}, {status: 500});
   }
 
-  // soon: mange that token
+  const resData = await response.json();
+  const token = resData.token;
+
+  localStorage.setItem('token', token);
+
   return redirect('/');
 
 }
